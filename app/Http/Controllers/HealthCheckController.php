@@ -25,7 +25,7 @@ class HealthCheckController extends Controller
      * @param EntityManagerInterface $entityManager
      * @return string
      */
-    public function test(Request $request, EntityManagerInterface $entityManager): string
+    public function hello(Request $request, EntityManagerInterface $entityManager): string
     {
         // проверяем соединение с БД
         $entityManager->getConnection()->connect();
