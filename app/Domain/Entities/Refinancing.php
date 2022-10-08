@@ -6,6 +6,10 @@ namespace App\Domain\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity()
+ * @ORM\Table(name="refinancing")
+ */
 class Refinancing
 {
     /**

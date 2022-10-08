@@ -6,10 +6,8 @@ namespace App\Domain\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- */
-class Mortgage extends Loan
+//class Mortgage extends Loan
+class Mortgage
 {
 
     /**
@@ -34,7 +32,6 @@ class Mortgage extends Loan
         float $initialPaymentPercent,
         string $typeOfPerson
     ) {
-        parent::__construct($title, $details, $interestRate, $maxSum, $maxTermInYears, $minAge, $customerCategory, $typeOfPerson);
 
         $this->initialPaymentPercent = $initialPaymentPercent;
     }

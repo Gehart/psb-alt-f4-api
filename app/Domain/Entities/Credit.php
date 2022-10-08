@@ -6,10 +6,8 @@ namespace App\Domain\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- */
-class Credit extends Loan
+//class Credit extends Loan
+class Credit
 {
     public const TYPE = 'credit';
 }

@@ -9,21 +9,15 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity()
  * @ORM\Table(name="loan")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type_of_lending", type="string")
- * @ORM\DiscriminatorMap({
- *      "credit" = "App\Domain\Entities\Credit",
- *      "mortgage" = "App\Domain\Entities\Mortgage"
- * })
  */
-abstract class Loan
+class Loan
 {
     public const MORTGAGE_TYPE = 'mortgage';
     public const CREDIT_TYPE = 'credit';
 
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
     private ?int $id = null;
@@ -49,14 +43,22 @@ abstract class Loan
     /** @ORM\Column(name="min_age", type="integer") */
     private ?int $minAge;
 
-    /** @ORM\Column(name="customer_category", type="text") */
-    private string $customerCategory;
+    /** @ORM\Column(name="customer_category", type="integer") */
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CustomerCategory", inversedBy="loan")
+     * @ORM\JoinColumn(name="customer_category_id", referencedColumnName="id")
+     */
+    private CustomerCategory $customerCategory;
 
     /** @ORM\Column(name="type_of_person", type="text") */
     private string $typeOfPerson;
 
-    /** @ORM\Column(name="initial_payment_percent", type="float") */
-    private float $initialPaymentPercent;
+    /** @ORM\Column(name="type_of_loan", type="text") */
+    private string $typeOfLoan;
+
+    /** @ORM\Column(name="initial_payment_percent", type="float", nullable=true) */
+    private ?float $initialPaymentPercent;
 
     /**
      * @param string $title
@@ -65,8 +67,10 @@ abstract class Loan
      * @param float|null $maxSum
      * @param int $maxTermInYears
      * @param int|null $minAge
-     * @param string $customerCategory
+     * @param CustomerCategory $customerCategory
      * @param string $typeOfPerson
+     * @param string $typeOfLoan
+     * @param float|null $initialPaymentPercent
      */
     public function __construct(
         string $title,
@@ -75,8 +79,10 @@ abstract class Loan
         ?float $maxSum,
         int $maxTermInYears,
         ?int $minAge,
-        string $customerCategory,
-        string $typeOfPerson
+        CustomerCategory $customerCategory,
+        string $typeOfPerson,
+        string $typeOfLoan,
+        ?float $initialPaymentPercent
     ) {
         $this->title = $title;
         $this->details = $details;
@@ -86,6 +92,8 @@ abstract class Loan
         $this->minAge = $minAge;
         $this->customerCategory = $customerCategory;
         $this->typeOfPerson = $typeOfPerson;
+        $this->typeOfLoan = $typeOfLoan;
+        $this->initialPaymentPercent = $initialPaymentPercent;
     }
 
     /**
@@ -145,9 +153,9 @@ abstract class Loan
     }
 
     /**
-     * @return string
+     * @return CustomerCategory
      */
-    public function getCustomerCategory(): string
+    public function getCustomerCategory(): CustomerCategory
     {
         return $this->customerCategory;
     }
@@ -158,5 +166,21 @@ abstract class Loan
     public function getTypeOfPerson(): string
     {
         return $this->typeOfPerson;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeOfLoan(): string
+    {
+        return $this->typeOfLoan;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getInitialPaymentPercent(): ?float
+    {
+        return $this->initialPaymentPercent;
     }
 }
