@@ -27,6 +27,8 @@ $app->withFacades();
 
 // $app->withEloquent();
 
+$app->configure('swagger-lume');
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings

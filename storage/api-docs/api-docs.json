@@ -1,0 +1,53 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "PSB Alt-F4 API",
+        "description": "Documentation for api for Alt-F4 command's project",
+        "contact": {
+            "url": "https://t.me/giorlov",
+            "name": "Telegram link"
+        },
+        "version": "0.0.1"
+    },
+    "servers": [
+        {
+            "url": "http://1052485-cd87141.tmweb.ru/backend/"
+        },
+        {
+            "url": "http://localhost/"
+        }
+    ],
+    "paths": {
+        "/health-check": {
+            "put": {
+                "summary": "Health-check",
+                "description": "Health-check",
+                "responses": {
+                    "200": {
+                        "description": "Успешное выполнение запрос",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "format": "int32"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "It's good."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
