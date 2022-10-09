@@ -3,38 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Entities\CreditCard;
-use App\Domain\Entities\CreditCardRepository;
+use App\Domain\Entities\CustomerCategoryRepository;
 use App\Domain\Entities\Loan;
 use App\Domain\Entities\LoanRepository;
 use App\Domain\Entities\Refinancing;
 use App\Domain\Entities\RefinancingRepository;
+use App\Http\Assembler\LoansGettingRequestAssembler;
 use App\Http\Formatter\CustomerCategoriesFormatter;
 use App\Http\Request\CategoriesGettingRequest;
+use App\Http\Request\CreditProgramByNameRequest;
 use App\Http\Request\LoansGettingRequest;
+use App\Service\Loans\LoansGettingService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CreditProgramController extends Controller
 {
-
     public function __construct(
-        private CustomerCategoriesFormatter $formatter
+        private CustomerCategoriesFormatter $formatter,
+        private LoansGettingRequestAssembler $assembler,
     ) {
     }
 
     /**
-     * @param CategoriesGettingRequest $request
+     * @param CreditProgramByNameRequest $request
      * @param EntityManagerInterface $entityManager
      *
      * @return array
      */
-    public function getCreditProgramByName(CategoriesGettingRequest $request, EntityManagerInterface $entityManager): array
+    public function getCreditProgramByName(CreditProgramByNameRequest $request, EntityManagerInterface $entityManager): array
     {
         $titlePart = $request->get('title');
 
         /** @var LoanRepository $loanRepository */
         $loanRepository = $entityManager->getRepository(Loan::class);
 
-        /** @var CreditCardRepository $creditCardRepository */
+        /** @var CustomerCategoryRepository $creditCardRepository */
         $creditCardRepository = $entityManager->getRepository(CreditCard::class);
 
         /** @var RefinancingRepository $refinancingRepository */
@@ -62,5 +65,13 @@ class CreditProgramController extends Controller
         return $this->formatter->format($loans);
     }
 
-//    public function getLoans(LoansGettingRequest $request, )
+    public function getLoans(
+        LoansGettingRequest $loansGettingRequest,
+        LoansGettingService $loansGettingService
+    ): array
+    {
+        $request = $this->assembler->create($loansGettingRequest);
+        $loans = $loansGettingService->getLoans($request);
+
+    }
 }

@@ -7,7 +7,7 @@ namespace App\Domain\Entities;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Domain\Entities\CreditCardRepository")
+ * @ORM\Entity(repositoryClass="CustomerCategoryRepository")
  * @ORM\Table(name="credit_card")
  */
 class CreditCard

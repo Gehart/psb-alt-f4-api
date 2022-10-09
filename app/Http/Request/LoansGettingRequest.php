@@ -13,7 +13,7 @@ class LoansGettingRequest extends StandardRequest
             'type_of_loan' => 'string|required',
             'customer_category_id' => 'int|required',
             'term' => 'int|required',
-            'sum' => 'float|required',
+            'sum' => 'numeric|required',
         ];
     }
 }

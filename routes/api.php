@@ -26,4 +26,6 @@ $router->group(['middleware' => [ResponseMiddleware::class]], static function ()
     $router->get('/credit-program', CreditProgramController::class . '@getCreditProgramByName');
 
     $router->get('/customer-categories', CreditProgramController::class . '@getCustomerCategories');
+
+    $router->get('/get-loans', CreditProgramController::class . '@getLoans');
 });
