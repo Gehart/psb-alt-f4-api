@@ -59,7 +59,7 @@ class Loan
     private ?float $initialPaymentPercent;
 
     /** @ORM\Column(name="psb_url", type="text", nullable=true) */
-    private ?float $psbUrl;
+    private ?string $psbUrl;
 
     /**
      * @param string $title
@@ -72,7 +72,7 @@ class Loan
      * @param string $typeOfPerson
      * @param string $typeOfLoan
      * @param float|null $initialPaymentPercent
-     * @param float|null $psbUrl
+     * @param string|null $psbUrl
      */
     public function __construct(
         string $title,
@@ -85,7 +85,7 @@ class Loan
         string $typeOfPerson,
         string $typeOfLoan,
         ?float $initialPaymentPercent,
-        ?float $psbUrl
+        ?string $psbUrl
     ) {
         $this->title = $title;
         $this->details = $details;
@@ -189,9 +189,9 @@ class Loan
     }
 
     /**
-     * @return float|null
+     * @return string|null
      */
-    public function getPsbUrl(): ?float
+    public function getPsbUrl(): ?string
     {
         return $this->psbUrl;
     }
