@@ -10,6 +10,7 @@ use App\Domain\Entities\Refinancing;
 use App\Domain\Entities\RefinancingRepository;
 use App\Http\Assembler\LoansGettingRequestAssembler;
 use App\Http\Formatter\CustomerCategoriesFormatter;
+use App\Http\Formatter\LoansProductsFormatter;
 use App\Http\Request\CategoriesGettingRequest;
 use App\Http\Request\CreditProgramByNameRequest;
 use App\Http\Request\LoansGettingRequest;
@@ -67,11 +68,13 @@ class CreditProgramController extends Controller
 
     public function getLoans(
         LoansGettingRequest $loansGettingRequest,
-        LoansGettingService $loansGettingService
+        LoansGettingService $loansGettingService,
+        LoansProductsFormatter $loansProductsFormatter,
     ): array
     {
         $request = $this->assembler->create($loansGettingRequest);
-        $loans = $loansGettingService->getLoans($request);
+        $loansDTO = $loansGettingService->getLoans($request);
 
+        return $loansProductsFormatter->format($loansDTO);
     }
 }
