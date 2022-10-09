@@ -7,7 +7,7 @@ namespace App\Domain\Entities;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Domain\Entities\LoanRepository")
+ * @ORM\Entity(repositoryClass="LoanRepository")
  * @ORM\Table(name="loan")
  */
 class Loan
@@ -43,10 +43,8 @@ class Loan
     /** @ORM\Column(name="min_age", type="integer") */
     private ?int $minAge;
 
-    /** @ORM\Column(name="customer_category", type="integer") */
-
     /**
-     * @ORM\ManyToOne(targetEntity="CustomerCategory", inversedBy="loan")
+     * @ORM\ManyToOne(targetEntity="CustomerCategory", inversedBy="loans")
      * @ORM\JoinColumn(name="customer_category_id", referencedColumnName="id")
      */
     private CustomerCategory $customerCategory;
