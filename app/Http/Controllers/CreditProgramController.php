@@ -8,16 +8,24 @@ use App\Domain\Entities\Loan;
 use App\Domain\Entities\LoanRepository;
 use App\Domain\Entities\Refinancing;
 use App\Domain\Entities\RefinancingRepository;
+use App\Http\Formatter\CustomerCategoriesFormatter;
 use App\Http\Request\CategoriesGettingRequest;
+use App\Http\Request\LoansGettingRequest;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CreditProgramController extends Controller
 {
+
+    public function __construct(
+        private CustomerCategoriesFormatter $formatter
+    ) {
+    }
+
     /**
      * @param CategoriesGettingRequest $request
      * @param EntityManagerInterface $entityManager
      *
-     * @return string
+     * @return array
      */
     public function getCreditProgramByName(CategoriesGettingRequest $request, EntityManagerInterface $entityManager): array
     {
@@ -51,52 +59,8 @@ class CreditProgramController extends Controller
         ]);
 
 
-        return $this->groupLoanByCategories($loans);
+        return $this->formatter->format($loans);
     }
 
-    /**
-     * @param array<Loan> $loans
-     *
-     * @return array
-     */
-    private function groupLoanByCategories(array $loans): array
-    {
-        $groupedByCategoriesLoans = [];
-        foreach ($loans as $loan) {
-            $groupedByCategoriesLoans[$loan->getCustomerCategory()->getId()][] = $loan;
-        }
-
-        $categoriesInfo = [];
-        foreach ($groupedByCategoriesLoans as $categoriesLoans) {
-            $maxSum = 0;
-            $maxTerm = 0;
-
-            /** @var array<Loan> $categoriesLoans */
-            foreach ($categoriesLoans as $loan) {
-                if ($loan->getMaxSum() > $maxSum) {
-                    $maxSum = $loan->getMaxSum();
-                }
-
-                if ($loan->getMaxTermInYears() > $maxTerm) {
-                    $maxTerm = $loan->getMaxTermInYears();
-                }
-            }
-
-//            Log::NOTICE('cc', $categoriesLoans);
-            $currentCategory = $categoriesLoans[0]->getCustomerCategory();
-
-
-            $categoriesInfo[] = [
-                'customer_category_id' => $currentCategory->getId(),
-                'name' => $currentCategory->getTitle(),
-                'maxSum' => $maxSum,
-                'maxTerm' => $maxTerm,
-            ];
-
-        }
-
-        return [
-            'categories' => $categoriesInfo,
-        ];
-    }
+//    public function getLoans(LoansGettingRequest $request, )
 }
