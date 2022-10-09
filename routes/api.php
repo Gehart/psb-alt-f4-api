@@ -24,4 +24,6 @@ $router->group(['middleware' => [ResponseMiddleware::class]], static function ()
     $router->get('/health-check', CreditProgramController::class . '@check');
 
     $router->get('/credit-program', CreditProgramController::class . '@getCreditProgramByName');
+
+    $router->get('/customer-categories', CreditProgramController::class . '@getCustomerCategories');
 });

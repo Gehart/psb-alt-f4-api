@@ -8,20 +8,18 @@ use App\Domain\Entities\Loan;
 use App\Domain\Entities\LoanRepository;
 use App\Domain\Entities\Refinancing;
 use App\Domain\Entities\RefinancingRepository;
-use App\Http\Request\CreditProgramByNameRequest;
-use Doctrine\Common\Collections\Criteria;
+use App\Http\Request\CategoriesGettingRequest;
 use Doctrine\ORM\EntityManagerInterface;
-use Illuminate\Http\Request;
 
 class CreditProgramController extends Controller
 {
     /**
-     * @param CreditProgramByNameRequest $request
+     * @param CategoriesGettingRequest $request
      * @param EntityManagerInterface $entityManager
      *
      * @return string
      */
-    public function getCreditProgramByName(CreditProgramByNameRequest $request, EntityManagerInterface $entityManager): array
+    public function getCreditProgramByName(CategoriesGettingRequest $request, EntityManagerInterface $entityManager): array
     {
         $titlePart = $request->get('title');
 
@@ -34,13 +32,71 @@ class CreditProgramController extends Controller
         /** @var RefinancingRepository $refinancingRepository */
         $refinancingRepository = $entityManager->getRepository(Refinancing::class);
 
-//        $loanRepository->createQueryBuilder('qb')->expr()->like()
         $loans = $loanRepository->getByTitle($titlePart);
 
-//        $expr = Criteria::expr()->contains('title', $titlePart);
-//
-//        $loans = $loanRepository->findBy([$expr]);
-//        dd($loans);
         return $loans;
+    }
+
+    public function getCustomerCategories(CategoriesGettingRequest $request, EntityManagerInterface $entityManager): array
+    {
+        $typeOfPerson = $request->get('type_of_person');
+        $typeOfLoan = $request->get('type_of_loan');
+
+        /** @var LoanRepository $loanRepository */
+        $loanRepository = $entityManager->getRepository(Loan::class);
+
+        $loans = $loanRepository->findBy([
+            'typeOfPerson' => $typeOfPerson,
+            'typeOfLoan' => $typeOfLoan,
+        ]);
+
+
+        return $this->groupLoanByCategories($loans);
+    }
+
+    /**
+     * @param array<Loan> $loans
+     *
+     * @return array
+     */
+    private function groupLoanByCategories(array $loans): array
+    {
+        $groupedByCategoriesLoans = [];
+        foreach ($loans as $loan) {
+            $groupedByCategoriesLoans[$loan->getCustomerCategory()->getId()][] = $loan;
+        }
+
+        $categoriesInfo = [];
+        foreach ($groupedByCategoriesLoans as $categoriesLoans) {
+            $maxSum = 0;
+            $maxTerm = 0;
+
+            /** @var array<Loan> $categoriesLoans */
+            foreach ($categoriesLoans as $loan) {
+                if ($loan->getMaxSum() > $maxSum) {
+                    $maxSum = $loan->getMaxSum();
+                }
+
+                if ($loan->getMaxTermInYears() > $maxTerm) {
+                    $maxTerm = $loan->getMaxTermInYears();
+                }
+            }
+
+//            Log::NOTICE('cc', $categoriesLoans);
+            $currentCategory = $categoriesLoans[0]->getCustomerCategory();
+
+
+            $categoriesInfo[] = [
+                'customer_category_id' => $currentCategory->getId(),
+                'name' => $currentCategory->getTitle(),
+                'maxSum' => $maxSum,
+                'maxTerm' => $maxTerm,
+            ];
+
+        }
+
+        return [
+            'categories' => $categoriesInfo,
+        ];
     }
 }
