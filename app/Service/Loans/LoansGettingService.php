@@ -23,13 +23,8 @@ class LoansGettingService
         /** @var LoanRepository $loanRepository */
         $loanRepository = $this->entityManager->getRepository(Loan::class);
 
-        $loans = $loanRepository->findBy([
-            'typeOfPerson' => $requestDTO->getTypeOfPerson(),
-            'typeOfLoan' => $requestDTO->getTypeOfLoan(),
-            'customerCategory' => $requestDTO->getCustomerCategory(),
-        ]);
+        $loans = $loanRepository->getAvailableLoan($requestDTO);
 
-        // TODO: prices
         $loansPrices = [];
         foreach ($loans as $loan) {
             $loansPrices = $this->loanCalculatingService->calculate($loan, $requestDTO);
