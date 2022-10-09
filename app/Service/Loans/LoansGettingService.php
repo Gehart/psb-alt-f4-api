@@ -14,6 +14,7 @@ class LoansGettingService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private LoanCalculatingService $loanCalculatingService,
     ) {
     }
 
@@ -29,11 +30,11 @@ class LoansGettingService
         ]);
 
         // TODO: prices
-//        $loansPrices = [];
-//        foreach ($loans as $loan) {
-//
-//        }
+        $loansPrices = [];
+        foreach ($loans as $loan) {
+            $loansPrices = $this->loanCalculatingService->calculate($loan, $requestDTO);
+        }
 
-        return new LoansGettingResponseDTO($loans);
+        return new LoansGettingResponseDTO($loans, $loansPrices);
     }
 }

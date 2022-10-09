@@ -13,7 +13,16 @@ class LoansGettingResponseDTO
      */
     public function __construct(
         private array $loans,
+        private array $prices,
     ) {
+    }
+
+    /**
+     * @return array
+     */
+    public function getPrices(): array
+    {
+        return $this->prices;
     }
 
     /**

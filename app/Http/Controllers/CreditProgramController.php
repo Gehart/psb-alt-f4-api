@@ -75,6 +75,6 @@ class CreditProgramController extends Controller
         $request = $this->assembler->create($loansGettingRequest);
         $loansDTO = $loansGettingService->getLoans($request);
 
-        return $loansProductsFormatter->format($loansDTO);
+        return $loansProductsFormatter->format($loansDTO, $request);
     }
 }
