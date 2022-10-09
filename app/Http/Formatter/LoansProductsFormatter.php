@@ -31,8 +31,6 @@ class LoansProductsFormatter
             }
         }
 
-
-
         return [
             'products' => $formattedLoans,
         ];
@@ -51,6 +49,7 @@ class LoansProductsFormatter
             'title' => $loan->getTitle(),
             'details' => $loan->getDetails(),
             'interest_rate' => $loan->getInterestRate(),
+            'psb_url' => $loan->getPsbUrl(),
             'maxSum' => $loan->getMaxSum(),
             'max_term_in_years' => $loan->getMaxTermInYears(),
             'min_age' => $loan->getMinAge(),
